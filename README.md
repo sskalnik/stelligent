@@ -111,7 +111,8 @@ curl $SERVER_IP:8080/service
 Tests use RSpec and [Rack::Test](https://github.com/rack-test/rack-test)
 
 I recommend using a formatter in order to see the specifics of the tests:
-```$ rspec --format documentation
+`$ rspec --format documentation`
+```
 StelligentMiniProject
   get "/"
     should eq 200
