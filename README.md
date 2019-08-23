@@ -107,6 +107,22 @@ curl $SERVER_IP:8080/service
 {"siteUpSince":"2018-10-14 03:43:46 +0200","IPs":{"123.45.67.89":9}}
 ```
 
+## Testing
+Tests use RSpec and [Rack::Test](https://github.com/rack-test/rack-test)
+
+I recommend using a formatter in order to see the specifics of the tests:
+```$ rspec --format documentation
+StelligentMiniProject
+  get "/"
+    should eq 200
+    should include "Automation for the People"
+  returns the JSON message
+    has a content type of JSON
+
+Finished in 0.01576 seconds (files took 0.11677 seconds to load)
+3 examples, 0 failures
+```
+
 ## FAQ
 ### How do I associate git branches with Elastic Beanstalk application stack environments?
 [Check out the FOO branch and then \`eb use BAR\` to associate the branch with the environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-cli-git.html#eb3-cli-git.branches)
