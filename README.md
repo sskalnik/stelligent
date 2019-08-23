@@ -25,9 +25,24 @@ eb create stelligent-$(ENVIRONMENT_SUCH_AS_DEV_OR_PROD)
 For example, `eb create stelligent-dev`
 
 ### Clean up
+#### Terminate the environment
+The following command will terminate the entire environment and its application stack in Elastic Beanstalk:
 ```bash
 eb terminate stelligent-dev
 ```
+
+#### Delete old versions
+Terminated environments are **not deleted**! They can be restored if desired, such as in a rollback operation.
+To completely destroy the environment (and not run into a `TooManyApplicationVersions Exception` when you [hit the limit](https://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CreateApplicationVersion.html#API_CreateApplicationVersion_Errors)
+```bash
+# View application versions (even deleted ones):
+$ aws elasticbeanstalk describe-application-versions --profile $AWS_PROFILE --region $AWS_REGION | egrep "ApplicationName|VersionLabel"
+# Delete old versions:
+$ eb labs cleanup-versions --older-than 1 --num-to-leave 1 stelligent
+```
+
+You can leave more one old version by changing the `--older-than` and `--num-to-leave` values.
+
 
 ## How to deploy elsewhere
 
