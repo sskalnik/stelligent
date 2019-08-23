@@ -20,7 +20,7 @@ class StelligentMiniProject
   def stelligent_response
     {
       message: "Automation for the People",
-      timestamp: Time.now
+      timestamp: Time.now.to_i
     }.to_json
   end
 
