@@ -7,7 +7,10 @@ A Rack project that runs on port 8080 and returns a JSON response that looks lik
 }
 ```
 
+## Live demo site
 My example site is http://stelligent.homewor.cc/
+
+The site was set up using R53: an A record points to the EB stack's Alias.
 
 ## How to deploy to Elastic Beanstalk
 ### Requirements and prerequisites
@@ -51,8 +54,8 @@ RVM is ideal
 ```bash
 # Install RVM
 \curl -sSL https://get.rvm.io | bash -s stable --ruby
-# Use the same Ruby I used to develop this package
-rvm use --default ruby-2.5.1
+# Use the same Ruby version for development and deployment! (2.6 latest)
+rvm use --default ruby-2.6.3
 ``` 
 
 ### Install:
@@ -75,7 +78,8 @@ Use `bundle info [gemname]` to see where a bundled gem is installed.
 ```bash
 $ bundle exec rackup -E $TEST_DEVELOPMENT_DEPLOY
 ```
-Obviously you should not use the actual variable `$TEST_DEVELOPMENT_DEPLOY`...
+Obviously you should not use the actual variable `$TEST_DEVELOPMENT_DEPLOY`...  
+
 For example, `-E development`, or `-E test`.
 
 ```ruby
