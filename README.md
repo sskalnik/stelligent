@@ -24,26 +24,6 @@ eb create stelligent-$(ENVIRONMENT_SUCH_AS_DEV_OR_PROD)
 
 For example, `eb create stelligent-dev`
 
-### Clean up
-#### Terminate the environment
-The following command will terminate the entire environment and its application stack in Elastic Beanstalk:
-```bash
-eb terminate stelligent-dev
-```
-
-#### Delete old versions
-Terminated environments are **not deleted**! They can be restored if desired, such as in a rollback operation.
-To completely destroy the environment (and not run into a `TooManyApplicationVersions Exception` when you [hit the limit](https://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CreateApplicationVersion.html#API_CreateApplicationVersion_Errors)
-```bash
-# View application versions (even deleted ones):
-$ aws elasticbeanstalk describe-application-versions --profile $AWS_PROFILE --region $AWS_REGION | egrep "ApplicationName|VersionLabel"
-# Delete old versions:
-$ eb labs cleanup-versions --older-than 1 --num-to-leave 1 stelligent
-```
-
-You can leave more one old version by changing the `--older-than` and `--num-to-leave` values.
-
-
 ## How to deploy elsewhere
 
 ### Prerequisites:
@@ -125,6 +105,7 @@ curl $SERVER_IP:8080/service
 ## Testing
 Tests use RSpec and [Rack::Test](https://github.com/rack-test/rack-test)
 
+### Manually with RSpec
 I recommend using a formatter in order to see the specifics of the tests:
 `$ rspec --format documentation`
 ```
@@ -139,6 +120,51 @@ Finished in 0.01576 seconds (files took 0.11677 seconds to load)
 3 examples, 0 failures
 ```
 
+### Automatically with Rake task
+```ruby
+$ rake
+
+StelligentMiniProject
+  when getting "/"
+    should eq 200
+    should include "Automation for the People"
+  when getting "/some_invalid_path/"
+    should not eq 200
+    should match /4\d\d/
+    should eq 404
+  when in development or test
+    runs on port 8888
+  when in deploy or production
+    runs on port 8080
+  when returning the required JSON message
+    has a content type of JSON
+    uses an integer timestamp format
+    has the appropriate timestamp string length
+
+Finished in 0.03266 seconds (files took 0.18749 seconds to load)
+10 examples, 0 failures
+```
+
+## Clean up after Elastic Beanstalk deployment
+### Terminate the environment
+The following command will terminate the entire environment and its application stack in Elastic Beanstalk:
+```bash
+eb terminate stelligent-dev
+```
+
+### Delete old versions
+Terminated environments are **not deleted**! They can be restored if desired, such as in a rollback operation.
+To completely destroy the environment (and not run into a `TooManyApplicationVersions Exception` when you [hit the limit](https://docs.aws.amazon.com/elasticbeanstalk/latest/api/API_CreateApplicationVersion.html#API_CreateApplicationVersion_Errors)
+```bash
+# View application versions (even deleted ones):
+$ aws elasticbeanstalk describe-application-versions --profile $AWS_PROFILE --region $AWS_REGION | egrep "ApplicationName|VersionLabel"
+# Delete old versions:
+$ eb labs cleanup-versions --older-than 1 --num-to-leave 1 stelligent
+```
+
+You can leave more than one old version by changing the `--older-than` and `--num-to-leave` values.
+
+
 ## FAQ
 ### How do I associate git branches with Elastic Beanstalk application stack environments?
 [Check out the FOO branch and then \`eb use BAR\` to associate the branch with the environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-cli-git.html#eb3-cli-git.branches)
@@ -146,12 +172,21 @@ Finished in 0.01576 seconds (files took 0.11677 seconds to load)
 ## Additional features exposed by the REST endpoint
 You can only GET, but it's still technically REST, right? ;)
 
-### Server (host) uptime
+### Server (host) uptime and visitor IP counts
 ```bash
 curl $SERVER_IP:8080/system
 ```
 ```json
 {"siteUpSince":"2018-01-07 00:07:14 +0100","IPs":{"123.45.167.89":4}}
+```
+
+### Service (application) uptime and visitor IP counts
+The service uptime tends to be low, especially relative to the server (instance) uptime. This is due to Puma stopping/starting as load fluctuates
+```bash
+curl $SERVER_IP:8080/service
+```
+```json
+{"siteUpSince":"2019-08-23 19:34:47 +0000","IPs":{"70.178.62.10":2}}
 ```
 
 ## Original text:
@@ -162,7 +197,7 @@ curl $SERVER_IP:8080/system
 > ```json
 > {
 >     "message": "Automation for the People",
->         "timestamp": 1566515652
+>     "timestamp": 1566515652
 > }
 >
 > ```
