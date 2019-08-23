@@ -6,12 +6,16 @@ require_relative '../stelligent'
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
+  config.fail_if_no_examples = true
+  # Show verbose per-test output instead of just ".....F....F.."
+  config.formatter = 'documentation'
 end
 
 describe StelligentMiniProject do
   let(:app) { StelligentMiniProject.new }
   let(:response) { get '/' }
 
+  # Intentionally use two different approaches to formatting `it...expect` statements just to show what's possible
   context 'get "/"' do
     it { expect(response.status).to eq 200 }
     it { expect(response.body).to include "Automation for the People" }
