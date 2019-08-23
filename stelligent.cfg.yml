@@ -1,0 +1,95 @@
+EnvironmentConfigurationMetadata:
+  Description: Example Elastic Beanstalk configuration for Stelligent homework site
+Platform:
+  PlatformArn: arn:aws:elasticbeanstalk:us-west-2::platform/Puma with Ruby 2.6 running on 64bit Amazon Linux/2.8.4
+OptionSettings:
+  AWSEBLoadBalancer.aws:elb:listener:80:
+    InstancePort: '8080'
+  aws:elasticbeanstalk:command:
+    BatchSize: '30'
+    BatchSizeType: Percentage
+  aws:elasticbeanstalk:application:environment:
+    RACK_ENV: deploy
+  aws:elasticbeanstalk:application:
+    Application Healthcheck URL: HTTP:8080/
+  aws:autoscaling:updatepolicy:rollingupdate:
+    RollingUpdateType: Health
+    RollingUpdateEnabled: true
+  aws:elb:policies:
+    ConnectionDrainingEnabled: true
+  aws:elasticbeanstalk:hostmanager:
+    LogPublicationControl: true
+  aws:elasticbeanstalk:cloudwatch:logs:
+    StreamLogs: true
+  aws:elb:loadbalancer:
+    CrossZone: true
+  aws:elasticbeanstalk:environment:
+    ServiceRole: aws-elasticbeanstalk-service-role
+    LoadBalancerType: classic
+  aws:elasticbeanstalk:healthreporting:system:
+    ConfigDocument:
+      Version: 1
+      CloudWatchMetrics:
+        Instance:
+          RootFilesystemUtil: 60
+          CPUIrq: 60
+          LoadAverage5min: 60
+          ApplicationRequests5xx: 60
+          ApplicationRequests4xx: 60
+          CPUUser: 60
+          LoadAverage1min: 60
+          ApplicationLatencyP50: 60
+          CPUIdle: 60
+          InstanceHealth: 60
+          ApplicationLatencyP95: 60
+          ApplicationLatencyP85: 60
+          ApplicationLatencyP90: 60
+          CPUSystem: 60
+          ApplicationLatencyP75: 60
+          CPUSoftirq: 60
+          ApplicationLatencyP10: 60
+          ApplicationLatencyP99: 60
+          ApplicationRequestsTotal: 60
+          ApplicationLatencyP99.9: 60
+          ApplicationRequests3xx: 60
+          ApplicationRequests2xx: 60
+          CPUIowait: 60
+          CPUNice: 60
+        Environment:
+          InstancesSevere: 60
+          InstancesDegraded: 60
+          ApplicationRequests5xx: 60
+          ApplicationRequests4xx: 60
+          ApplicationLatencyP50: 60
+          ApplicationLatencyP95: 60
+          ApplicationLatencyP85: 60
+          InstancesUnknown: 60
+          ApplicationLatencyP90: 60
+          InstancesInfo: 60
+          InstancesPending: 60
+          ApplicationLatencyP75: 60
+          ApplicationLatencyP10: 60
+          ApplicationLatencyP99: 60
+          ApplicationRequestsTotal: 60
+          InstancesNoData: 60
+          ApplicationLatencyP99.9: 60
+          ApplicationRequests3xx: 60
+          ApplicationRequests2xx: 60
+          InstancesOk: 60
+          InstancesWarning: 60
+      Rules:
+        Environment:
+          Application:
+            ApplicationRequests4xx:
+              Enabled: true
+    SystemType: enhanced
+  aws:autoscaling:launchconfiguration:
+    IamInstanceProfile: aws-elasticbeanstalk-ec2-role
+    InstanceType: t2.micro
+    EC2KeyName: aws-eb
+  aws:elasticbeanstalk:cloudwatch:logs:health:
+    HealthStreamingEnabled: true
+EnvironmentTier:
+  Type: Standard
+  Name: WebServer
+AWSConfigurationTemplateVersion: 1.1.0.0
