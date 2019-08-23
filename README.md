@@ -127,7 +127,10 @@ Finished in 0.01576 seconds (files took 0.11677 seconds to load)
 ### How do I associate git branches with Elastic Beanstalk application stack environments?
 [Check out the FOO branch and then \`eb use BAR\` to associate the branch with the environment](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-cli-git.html#eb3-cli-git.branches)
 
-#### Server (host) uptime
+## Additional features exposed by the REST endpoint
+You can only GET, but it's still technically REST, right? ;)
+
+### Server (host) uptime
 ```bash
 curl $SERVER_IP:8080/system
 ```
@@ -142,9 +145,10 @@ curl $SERVER_IP:8080/system
 > JSON payload with the current timestamp and a static message:
 > ```json
 > {
->   “message”: “Automation for the People”,
->   “timestamp”: 1529611161
+>     "message": "Automation for the People",
+>         "timestamp": 1566515652
 > }
+>
 > ```
 > Write code in a programming language (or languages, configuration management platforms, etc.) of your
 > choice that provisions an environment in AWS to run the application you built.
